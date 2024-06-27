@@ -3,38 +3,48 @@ using CodingTestAPI.Model;
 
 namespace CodingTestAPI.Services
 {
-    public class CodingCourseService : ICodingCourseService
+    public class CodingCourseService : ICodingTestService
     {
-        private readonly List<CodingCourse> _codingCourses;
 
-        public CodingCourseService()
+        public async Task<List<CodingTest>> DisplayResult(string[] inputItems)
         {
-            _codingCourses = new List<CodingCourse>() { 
-            new CodingCourse{ Id= 1, CourseName = ".Net Full Stack", DurationInMonth = 3, CourseCost = 1200},
-            new CodingCourse{ Id= 2, CourseName = "Angular", DurationInMonth = 2, CourseCost = 2000},
-            new CodingCourse{ Id= 3, CourseName = "Python", DurationInMonth = 6, CourseCost = 7000}
+           
+            var results = new List<CodingTest>();
 
-            };
-        }
-
-        public async Task<int> AddAsync(CodingCourse codingCourse)
-        {
-           if(codingCourse != null)
+            foreach (var value in inputItems)
             {
-                _codingCourses.Add(codingCourse);
-                return _codingCourses.Count();
+                if (int.TryParse(value, out int number))
+                {
+                    var finalResult = "";
+
+                    if (number % 3 == 0)
+                    {
+                        finalResult += "Fizz";
+                    }
+                    if (number % 5 == 0)
+                    {
+                        finalResult += (finalResult.Length > 0 ? "" : "") + "Buzz";
+                    }
+
+                    if(number % 3 != 0 && number % 5 != 0 && finalResult.Length == 0)
+                    {
+                        results.Add(new CodingTest { UserInput = value, FinalResult = "", DivisionPerfomed = new List<string> { "Divided"+Convert.ToString(number)+"By 3", "Divided" + Convert.ToString(number) + "By 5" } });
+                    }
+
+                    else
+                    {
+                        results.Add(new CodingTest { UserInput = value, FinalResult = finalResult, DivisionPerfomed = new List<string>() });
+                    }
+                   
+                }
+                else
+                {
+                    results.Add(new CodingTest { UserInput = value, FinalResult = "Invalid item" });
+                }
             }
-           else { return 0; }
-        }
 
-        public async Task<List<CodingCourse>> GetAllCodingCourseAsync()
-        {
-           return _codingCourses;
-        }
-
-        public async Task<List<CodingCourse>> GetAllCodingCourseByIdAsync(int id)
-        {
-            return _codingCourses.Where(c => c.Id == id).ToList();
+            return results;
         }
     }
+    
 }

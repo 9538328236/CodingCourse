@@ -8,7 +8,7 @@ namespace CodingTestAPI.Configurations
 
         public static IServiceCollection AddWebServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<ICodingCourseService, CodingCourseService>();
+            services.AddScoped<ICodingTestService, CodingCourseService>();
             return services;
         }
     }

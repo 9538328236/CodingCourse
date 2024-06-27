@@ -8,41 +8,20 @@ namespace CodingTestAPI.Controllers
     [Route("[controller]")]
     public class CodingCourseController : ControllerBase
     {
-        private readonly ICodingCourseService _codingCourseService;
+        private readonly ICodingTestService _codingCourseService;
 
-        public CodingCourseController(ICodingCourseService codingCourseService)
+        public CodingCourseController(ICodingTestService codingCourseService)
         {
             _codingCourseService = codingCourseService;
         }
 
-        [HttpGet(Name = "GetCodingCourseList")]
-        public async Task<IActionResult> Get()
+        [HttpPost]
+        [Route("get-response")]
+        public async Task<IActionResult> Post([FromBody] string[] inputs)
         {
-            var res = await _codingCourseService.GetAllCodingCourseAsync();
+            var res = await _codingCourseService.DisplayResult(inputs);
             return Ok(res);
         }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var codingCourseDetails =  await _codingCourseService.GetAllCodingCourseByIdAsync(id);
-            if (codingCourseDetails == null)
-            {
-                return NotFound();
-            }
-            else { return Ok(codingCourseDetails); }
-        }
-
-        [HttpPost]
-        [Route("save-coding-course")]
-        public async Task<IActionResult> Post([FromBody] CodingCourse codingCourse)
-        {
-            var id = await _codingCourseService.AddAsync(codingCourse);
-            if (id <= 0)
-            {
-                return NotFound();
-            }
-            else { return Ok(id); }
-        }
+       
     }
 }
